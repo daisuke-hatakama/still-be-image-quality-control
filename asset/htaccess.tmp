@@ -1,0 +1,39 @@
+# Replace to WebP and AVIF
+<IfModule mod_setenvif.c>
+    # JPEG、PNG、GIF WebP 画像へのリクエストを検出し、環境変数を設定
+    SetEnvIf Request_URI "\.(jpe?g|png|gif|webp)$" _image_request
+</IfModule>
+
+# 2. AVIF / WebP画像へのリダイレクト設定
+# -----------------------------
+<IfModule mod_rewrite.c>
+    # RewriteEngineを有効化
+    RewriteEngine On
+
+    # AVIF対応ブラウザからのリクエストの場合（WebPより優先）
+    RewriteCond %{HTTP_ACCEPT} image/avif
+    RewriteCond %{SCRIPT_FILENAME}.avif -f
+    RewriteRule .(jpe?g|png|gif)$ %{SCRIPT_FILENAME}.avif [T=image/avif]
+
+    # WebP対応ブラウザからのリクエストの場合
+    RewriteCond %{HTTP_ACCEPT} image/webp
+    RewriteCond %{SCRIPT_FILENAME}.webp -f
+    RewriteRule .(jpe?g|png|gif)$ %{SCRIPT_FILENAME}.webp [T=image/webp]
+</IfModule>
+
+# 3. キャッシュ制御ヘッダーの設定
+# -----------------------------
+<IfModule mod_headers.c>
+    # 画像リクエストの場合、VaryヘッダーにAcceptを追加
+    Header append Vary Accept env=_image_request
+</IfModule>
+
+# 4. MIMEタイプの設定
+# -----------------
+<IfModule mod_mime.c>
+    # AVIF / WebP画像のMIMEタイプを設定
+    AddType image/avif .avif
+    AddType image/webp .webp
+</IfModule>
+
+# /Replace to WebP and AVIF
