@@ -97,11 +97,15 @@ require_once( __DIR__. '/filter/filter-remove-large-original-image.php' );
  * 
  * メタデータ生成時に WebP の自動生成と
  * SSIM による自動最適化を WP-Cron に登録します。
+ * WordPress 7.1 の Client-side media processing では
+ * finalize 完了時にも同じ登録を行います。
  * 
  * @since 2.0.0
+ * @since 2.2.0 Client-side media finalize 対応
  */
 require_once( __DIR__. '/filter/filter-set-auto-optimization.php' );
 require_once( __DIR__. '/filter/filter-set-auto-optimization-avif.php' );
+require_once( __DIR__. '/filter/filter-client-side-media-finalize.php' );
 
 
 /**

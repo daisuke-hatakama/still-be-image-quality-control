@@ -55,12 +55,16 @@ trait Setting_Main {
 					'enable-webp-lossless'          => STILLBE_IQ_ENABLE_WEBP_LOSSLESS,          // true
 					'enable-webp-near-lossless'     => STILLBE_IQ_ENABLE_WEBP_NEAR_LOSSLESS,     // false
 					'enable-decimal-timeout-wpcron' => STILLBE_IQ_ENABLE_DECIMAL_TIMEOUT_WPCRON, // true
-					'enable-auto-optimize'          => STILLBE_IQ_ENABLE_AUTO_OPTIMIZE,          // false
+					'enable-auto-optimize'          => STILLBE_IQ_ENABLE_AUTO_OPTIMIZE,          // true
 					'enable-auto-optimize-on-recompress' => false,
 					'enable-purge-delivery-webp-on-recompress' => false,
 				),
 			)
 		);
+
+		if( ! isset( $this->current['toggle']['enable-auto-optimize'] ) ) {
+			$this->current['toggle']['enable-auto-optimize'] = STILLBE_IQ_ENABLE_AUTO_OPTIMIZE;
+		}
 
 		// Merge default quality level table settings
 		// @since 2.1.0
