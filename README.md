@@ -7,6 +7,8 @@
 
 Keep image quality while making files smaller for faster pages. Just install and activate; WebP and AVIF are generated automatically when the server supports them.
 
+An optional companion plugin can use the server’s `cwebp` binary for finer WebP encoding options.
+
 - [WordPress.org](https://wordpress.org/plugins/still-be-image-quality-control/)
 - [Changelog (`readme.txt`)](stillbe-image-quality-control/readme.txt)
 
@@ -43,16 +45,31 @@ Settings are under **Settings → Image Qualities**. Existing images keep their 
 
 See [`readme.txt`](stillbe-image-quality-control/readme.txt) for full instructions and FAQ.
 
+## Optional extension (`cwebp`)
+
+The main plugin can already generate WebP with Imagick or GD. [`still-be-image-quality-control-extends/`](still-be-image-quality-control-extends/) is a separate plugin that calls the `cwebp` utility installed on the server, which gives more encoding options than the PHP image libraries (lossy, lossless, and near-lossless where `cwebp` supports it).
+
+It requires:
+
+- The main plugin (WordPress `Requires Plugins: still-be-image-quality-control`)
+- `cwebp` available on the server (Google’s [libwebp](https://developers.google.com/speed/webp/docs/cwebp) tools)
+
+Copy the `still-be-image-quality-control-extends` directory into `wp-content/plugins/` and activate it after the main plugin. The settings screen then shows whether `cwebp` is available, plus the extra WebP options. If `cwebp` is missing, those options are unused.
+
+This extension is not listed on WordPress.org; it is distributed with this repository.
+
 ## Repository layout
 
 ```
 .
-├── README.md                          # GitHub readme (this file)
-├── assets/                            # WordPress.org plugin directory assets
-└── stillbe-image-quality-control/     # Plugin (equivalent to WordPress.org SVN trunk)
-    ├── stillbe-image-quality-control.php
-    ├── readme.txt                     # WordPress.org readme
-    └── asset/                         # Admin JS / CSS (plugin assets)
+├── README.md                                    # GitHub readme (this file)
+├── assets/                                      # WordPress.org plugin directory assets
+├── stillbe-image-quality-control/               # Main plugin (WordPress.org SVN trunk)
+│   ├── stillbe-image-quality-control.php
+│   ├── readme.txt                               # WordPress.org readme
+│   └── asset/                                   # Admin JS / CSS (plugin assets)
+└── still-be-image-quality-control-extends/      # Optional cwebp companion plugin
+    └── stillbe-image-quality-control-extends.php
 ```
 
 ## WordPress.org assets
@@ -105,6 +122,7 @@ WordPress.org caches assets aggressively, so replacements can take a while to ap
 - Plugin slug: `still-be-image-quality-control`
 - Text domain: `still-be-image-quality-control`
 - REST API namespace: `stillbe-iqc/v1`
+- Extension plugin folder: `still-be-image-quality-control-extends` (required extension version: 2.0.0)
 - Description, FAQ, and changelog for WordPress.org live in `stillbe-image-quality-control/readme.txt`. Keep that file in sync when you change public-facing copy.
 
 ## License
