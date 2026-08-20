@@ -105,7 +105,9 @@ trait Setting_Section_General {
 		$qualities = empty( $this->current['quality'] )    ? array() : $this->current['quality'];
 		$add_sizes = empty( $this->current['image-size'] ) ? array() : $this->current['image-size'];
 		$add_size_names = array_column( $add_sizes, 'name' );
-		$is_auto_optimized = ! empty( $this->current['toggle']['enable-auto-optimize'] );
+		$is_auto_optimized = isset( $this->current['toggle']['enable-auto-optimize'] )
+		                       ? ! empty( $this->current['toggle']['enable-auto-optimize'] )
+		                       : (bool) STILLBE_IQ_ENABLE_AUTO_OPTIMIZE;
 		$ao_target = empty( $this->current['auto-optimize-target'] ) ? 'balance' : $this->current['auto-optimize-target'];
 
 		// Image Sizes
@@ -141,8 +143,7 @@ trait Setting_Section_General {
 		echo '</p>';
 
 		echo '<div style="margin-top: 1.6em;">';
-		echo   '<p style="color: #C00; font-weight: bolder;">';
-		echo      esc_html__( '[Beta Function]', 'still-be-image-quality-control' ). ' ';
+		echo   '<p style="font-weight: bolder;">';
 		echo      esc_html__( 'Automatically optimize quality level (shave off compression ratio)', 'still-be-image-quality-control' ). ' ';
 		echo      esc_html__( '(JPEG / WebP / AVIF)', 'still-be-image-quality-control' );
 		echo   '</p>';

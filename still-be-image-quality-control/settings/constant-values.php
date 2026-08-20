@@ -14,7 +14,7 @@ if( ! defined( 'ABSPATH' ) ) {
 define( 'STILLBE_IQ_SLUG', 'still-be-image-quality-control' );
 
 // Plugin Version (stillbe-image-quality-control.php の Version と揃える)
-define( 'STILLBE_IQ_VERSION', '2.1.3' );
+define( 'STILLBE_IQ_VERSION', '2.2.0' );
 
 // 保存済み DB バージョン (オプション名)
 define( 'STILLBE_IQ_DB_VERSION_OPTION', 'sb-iqc-db-version' );
@@ -91,8 +91,9 @@ define( 'STILLBE_IQ_ENABLE_SAVE_WEBP_SYNC',           false );
 define( 'STILLBE_IQ_ENABLE_SAVE_AVIF_SYNC',           false );
 
 // 自動で最適化するフラグ
-// @since 2.0.0 ベータ機能のため既定は無効 (設定画面からオプトイン)
-define( 'STILLBE_IQ_ENABLE_AUTO_OPTIMIZE',            false );
+// @since 2.0.0 ベータ機能として追加 (既定は無効)
+// @since 2.2.0 本機能化。未設定時の既定は有効。保存済みの true / false は踏襲する
+define( 'STILLBE_IQ_ENABLE_AUTO_OPTIMIZE',            true );
 
 // 自動最適化の同時実行上限 (サーバ負荷に応じて設定画面で変更可)
 // @since 2.0.0

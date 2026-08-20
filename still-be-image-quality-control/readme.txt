@@ -3,8 +3,8 @@ Contributors: analogstudio
 Donate link: https://donate.stripe.com/aEUg2Q0iKgzbf0Q9AE
 Tags: optimize, image, webp, avif, automation
 Requires at least: 5.8
-Tested up to: 7.0
-Stable tag: 2.1.3
+Tested up to: 7.1
+Stable tag: 2.2.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -33,11 +33,12 @@ You can leave the defaults as they are, or adjust compression yourself for each 
 This is especially useful on WooCommerce and other product sites, where product thumbnails can be lighter for fast catalog pages while larger product photos stay sharper for detail views.
 There is also an optional quality test screen if you want to compare settings with your own eyes.
 
-### Automatic optimization (optional, beta)
+### Automatic optimization
 
-After upload, the plugin can keep working in the background to find a smaller file that still looks close to the original.
+After upload, the plugin keeps working in the background to find a smaller file that still looks close to the original.
 A second check helps avoid images that look too blocky or soft.
 Progress and size savings are recorded per image.
+You can turn this off in the settings if you prefer recompression only.
 
 ### Protecting your privacy
 
@@ -116,7 +117,7 @@ Recompress when you want existing uploads to follow new quality settings, or whe
 
 Recompression rebuilds resized images (and optional WebP / AVIF) from the original upload using your quality settings.
 Automatic optimization is an optional background process that further lowers quality step by step while watching visual quality (SSIM), and it can raise the level again if images look too blocky or soft.
-You can use recompression alone. Automatic optimization is disabled by default.
+You can use recompression alone. Automatic optimization is enabled by default when the setting has not been saved yet; a previously saved Enable or Disable choice is kept.
 
 Both can increase server load when many images are processed at once — especially bulk recompression — so run large jobs in smaller batches on shared hosting.
 
@@ -124,7 +125,7 @@ Both can increase server load when many images are processed at once — especia
 
 It lowers the quality level of each resized image until the target visual quality is reached, using SSIM (structural similarity) as an objective quality metric.
 When SSIM alone might allow too much compression, a secondary check based on edge detection looks for block noise and similar artifacts and raises the quality level if needed.
-This process runs automatically in the background, one image after another. (Disabled by default.)
+This process runs automatically in the background, one image after another.
 
 On shared or low-resource hosts, lower the auto-optimize concurrency if the server becomes busy.
 
@@ -217,6 +218,13 @@ That original is not referenced anywhere, so removing it helps free server stora
 
 
 == Changelog ==
+
+= 2.2.0 =
+
+Checked that it works with WordPress 7.1.
+
+Changed the default value of automatic optimization to enabled.
+
 
 = 2.1.3 =
 

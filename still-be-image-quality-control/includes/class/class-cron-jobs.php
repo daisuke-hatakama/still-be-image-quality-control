@@ -870,6 +870,7 @@ class Cron_Jobs {
 		$settings   = get_option( Setting::SETTING_NAME, array() );
 		$is_enabled = isset( $settings['toggle']['enable-auto-optimize'] ) ? $settings['toggle']['enable-auto-optimize'] : STILLBE_IQ_ENABLE_AUTO_OPTIMIZE;
 		if( ! $is_enabled ) {
+			Schedule_Cron::clear_client_side_finalize( $attachment_id );
 			return;
 		}
 
@@ -888,12 +889,14 @@ class Cron_Jobs {
 
 		$metadata = wp_get_attachment_metadata( $attachment_id );
 		if( empty( $metadata['file'] ) ) {
+			Schedule_Cron::clear_client_side_finalize( $attachment_id );
 			return;
 		}
 
 		// 試行回数の上限を超えたら、未処理サイズの WebP 生成だけ従来方式で完了させて終了する
 		// 処理済みサイズを渡すことで、最適化済みの WebP がテーブル品質で上書きされるのを防ぐ
 		if( self::MAX_ATTEMPTS < $attempt ) {
+			Schedule_Cron::clear_client_side_finalize( $attachment_id );
 			if( 'image/webp' !== $mime_type && 'image/avif' !== $mime_type ) {
 				$done = ( isset( $metadata[ Auto_Optimize_Progress::META_PROGRESS ]['done'] ) && is_array( $metadata[ Auto_Optimize_Progress::META_PROGRESS ]['done'] ) ) ?
 				          $metadata[ Auto_Optimize_Progress::META_PROGRESS ]['done'] :
@@ -922,6 +925,7 @@ class Cron_Jobs {
 			// ロック取得後にメタを再読込 (並列再圧縮などで古いスナップショットを避ける)
 			$metadata = wp_get_attachment_metadata( $attachment_id );
 			if( empty( $metadata['file'] ) ) {
+				Schedule_Cron::clear_client_side_finalize( $attachment_id );
 				return;
 			}
 
@@ -960,6 +964,7 @@ class Cron_Jobs {
 				// 完了時は統計（after）を保存
 				if( $is_complete && empty( $result['suspended'] ) ) {
 					$new_meta = Auto_Optimize_Progress::finalize_stats( $attachment_id, $new_meta );
+					Schedule_Cron::clear_client_side_finalize( $attachment_id );
 				}
 
 				wp_update_attachment_metadata( $attachment_id, $new_meta );

@@ -59,6 +59,12 @@ add_filter( 'wp_handle_upload', function( $upload ) {
 	// 画像 (image/*) 以外は何もしない
 	// Mime Type は wp_get_image_editor 関数で行われる
 
+	// Client-side の sideload はサムネイル単位で呼ばれるため、ここでは作らない。
+	// 代替配信は finalize 後の WP-Cron (generate_webp / generate_avif / auto_optimize) に任せる。
+	if( Schedule_Cron::is_sideload_request() ) {
+		return $upload;
+	}
+
 	// 自動最適化が有効な場合、WebP 生成は auto_optimize に一本化する
 	$settings = get_option( Setting::SETTING_NAME, array() );
 	$is_auto  = isset( $settings['toggle']['enable-auto-optimize'] ) ? $settings['toggle']['enable-auto-optimize'] : STILLBE_IQ_ENABLE_AUTO_OPTIMIZE;

@@ -18,7 +18,7 @@ An optional companion plugin can use the server’s `cwebp` binary for finer Web
 - **No generational degradation** — Rebuilding always starts from the original upload. Changing settings and regenerating again does not stack compression on already optimized files.
 - **Automatic WebP / AVIF delivery** — Supporting browsers receive next-gen formats without rewriting image URLs in your content (Apache `.htaccess` content negotiation). AVIF is preferred when both exist.
 - **Per-size, per-format quality** — Set JPEG, PNG, WebP, and AVIF independently for thumbnails versus larger images. Useful for WooCommerce catalog speed versus product detail sharpness.
-- **Optional automatic optimization (beta)** — Uses SSIM and edge detection to shrink files further while watching visual quality. Disabled by default.
+- **Automatic optimization** — Uses SSIM and edge detection to shrink files further while watching visual quality. Enabled by default.
 - **Privacy** — EXIF data (such as GPS) is stripped by default. You can turn this off in the settings.
 
 Also included: secure filenames, alt text from Exif, progressive JPEG, PNG8, `srcset` optimization, cache-clear query strings, deletion of unused original large images, custom image sizes, and recompression (including WP-Cron).
@@ -27,7 +27,7 @@ Also included: secure filenames, alt text from Exif, progressive JPEG, PNG8, `sr
 
 | Item | Requirement |
 | --- | --- |
-| WordPress | 5.8 or later (tested up to 7.0) |
+| WordPress | 5.8 or later (tested up to 7.1) |
 | PHP | 7.4 or later |
 | Image library | GD or Imagick (WordPress image editors) |
 
@@ -66,9 +66,9 @@ On upload and recompression, the plugin extends WordPress’s GD and Imagick ima
 
 When the server can encode them, sidecar WebP and AVIF files are written next to the usual JPEG/PNG. Content URLs stay unchanged. On Apache, an `.htaccess` file under `uploads` serves AVIF or WebP when the browser sends `Accept: image/avif` or `image/webp` (AVIF first). That negotiation does not apply on nginx-only or CDN setups unless you add equivalent rules.
 
-### Automatic optimization (beta)
+### Automatic optimization
 
-Disabled by default. When enabled, WP-Cron processes attachments in the background (default concurrency 2). A time budget of about half of `max_execution_time` is used so a large attachment can suspend and resume. Progress and bytes saved are stored on the attachment and shown in the Media Library list.
+Enabled by default. WP-Cron processes attachments in the background (default concurrency 2). A time budget of about half of `max_execution_time` is used so a large attachment can suspend and resume. Progress and bytes saved are stored on the attachment and shown in the Media Library list.
 
 For each raster size (and optional delivery WebP / AVIF):
 

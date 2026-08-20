@@ -3,7 +3,7 @@
 /**
  * Plugin Name:       Image Quality Control | Still BE
  * Description:       Keep image quality while making files smaller for faster pages - just install and you're set, with automatic WebP and AVIF.
- * Version:           2.1.3
+ * Version:           2.2.0
  * Requires at least: 5.8.1
  * Requires PHP:      7.4
  * Author:            Daisuke Yamamoto
@@ -93,10 +93,12 @@ foreach( glob( __DIR__. '/includes/class/*.php' ) as $file ) {
 
 // 管理画面での通知表示を初期化
 Admin_Notice::init();
+Auto_Optimize_Notice::init();
 
 
 // WP-Cron のバックグラウンド処理 (WebP 自動生成 / SSIM 自動最適化) を初期化
 Cron_Jobs::init();
+Schedule_Cron::init();
 
 
 // 管理画面操作用 REST API (stillbe-iqc/v1)

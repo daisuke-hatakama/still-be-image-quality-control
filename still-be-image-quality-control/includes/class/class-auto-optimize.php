@@ -597,16 +597,18 @@ class Auto_Optimize {
 						$measure
 					);
 
-					if( $found['quality'] < $jpeg_ceiling ) {
+					$force_client_resave = Schedule_Cron::should_recompress_client_side_size( $args['attachment_id'], $args['size_data'] );
+					if( $found['quality'] < $jpeg_ceiling || $force_client_resave ) {
 						// 確定品質でサブサイズを上書き保存する
+						// Client-side (wasm-vips) 製は天井と同値でもプラグインのエディタで書き直す
 						$ref_editor->set_quality( $found['quality'] );
 						$saved = $ref_editor->save( $args['size_file'], 'image/jpeg' );
+						$sb_iqc['quality'] = $found['quality'];
+						$sb_iqc['ssim']    = round( $found['ssim'], 4 );
+						if( isset( $found['mae'] ) ) {
+							$sb_iqc['mae'] = round( (float) $found['mae'], 6 );
+						}
 						if( ! is_wp_error( $saved ) ) {
-							$sb_iqc['quality'] = $found['quality'];
-							$sb_iqc['ssim']    = round( $found['ssim'], 4 );
-							if( isset( $found['mae'] ) ) {
-								$sb_iqc['mae'] = round( (float) $found['mae'], 6 );
-							}
 							$jpeg_resaved = true;
 						}
 					} else {
@@ -622,6 +624,13 @@ class Auto_Optimize {
 			} else {
 				// 天井が下限以下: 探索せず設定品質をメタに明示する
 				$sb_iqc['quality'] = $jpeg_ceiling;
+				if( Schedule_Cron::should_recompress_client_side_size( $args['attachment_id'], $args['size_data'] ) ) {
+					$ref_editor->set_quality( $jpeg_ceiling );
+					$saved = $ref_editor->save( $args['size_file'], 'image/jpeg' );
+					if( ! is_wp_error( $saved ) ) {
+						$jpeg_resaved = true;
+					}
+				}
 			}
 
 		}
